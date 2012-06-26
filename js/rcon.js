@@ -8,12 +8,13 @@ function refreshInfo()
 			{	// NS2 has a bug where it sometimes returns no data.  Don't error if that happens
 				$('#servermap').html(data.map);
 				$('#serverplayers').html(data.players_online+' players');
-				$('#playerstable tbody').empty();
 				$('#serveruptime').html(secondsToTime(data.uptime));
 				$('#marineres').html(data.marine_res);
 				$('#alienres').html(data.alien_res);
 				$('#servername').html(data.server_name);
 				$('#serverrate').html(Math.round(data.frame_rate*100)/100);
+
+				$('#playerstable tbody').empty();
 				for (i=0;i<data.player_list.length;i++)
 				{
 					player = data.player_list[i];
@@ -27,6 +28,10 @@ function refreshInfo()
 						player.humanTeam = 'Aliens';
 					}
 					$('#playerstable tbody').append(tmpl('player_row',player));
+				}
+				if (data.player_list.length == 0)
+				{
+					$('#playerstable tbody').append('<tr><td colspan="9" style="text-align: center;">No Connected Players</td></tr>');
 				}
 			}
 		},
@@ -149,7 +154,7 @@ function rcon(command)
 	lowerCommand = command.toLowerCase();
 	if (lowerCommand.indexOf('sv_ban') != -1 || lowerCommand.indexOf('sv_unban') != -1)
 	{
-		setTimeout("refreshBanList()",3000);
+		setTimeout("refreshBanList()",500);
 	}
 	if (lowerCommand.indexOf('sv_say') != -1 || lowerCommand.indexOf('sv_tsay') != -1 || lowerCommand.indexOf('sv_psay') != -1)
 	{
@@ -180,6 +185,19 @@ function sendChatMessage()
 	{
 		rcon('sv_tsay 2 '+chatMessage);
 	}
+}
+
+function sendManualBan()
+{
+	steamid = parseInt($('input[name=addban_steamid]').val());
+	duration = parseInt($('input[name=addban_duration]').val());
+	reason = $('input[name=addban_reason]').val();
+	if (duration < 0) duration = 0;
+
+	rcon('sv_ban '+steamid+' '+duration+' '+reason);
+	$('input[name=addban_steamid]').val('');
+	$('input[name=addban_duration]').val('');
+	$('input[name=addban_reason]').val('');
 }
 
 function changeTab()
