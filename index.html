@@ -40,10 +40,10 @@
 			  </a>
 			  <a class="brand" href="#">NS2 Web Admin</a>
 			  <div class="nav-collapse">
-				<ul class="nav">
-				  <li id="playerstab" onclick="changeTab('players');"><a href="#">Players</a></li>
-				  <li id="banstab" onclick="changeTab('bans')"><a href="#">Bans</a></li>
-				  <li id="performancetab" onclick="changeTab('performance')"><a href="#">Performance</a></li>
+				<ul class="nav" id="tabs">
+				  <li rel="playerscontent" class="active"><a href="#">Players</a></li>
+				  <li rel="banscontent"><a href="#">Bans</a></li>
+				  <li rel="performancecontent"><a href="#">Performance</a></li>
 				</ul>
 			  </div><!--/.nav-collapse -->
 			</div>
@@ -181,7 +181,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="row" id="banscontent">
+			<div class="row" id="banscontent" style="display: none;">
 				<table class="table table-striped" id="banstable">
 						<thead>
 							<th>Name</th>
@@ -193,7 +193,7 @@
 						</tbody>
 				</table>
 			</div>
-			<div class="row" id="performancecontent">
+			<div class="row" id="performancecontent" style="display: none;">
 				<div id="perfchart" style="width: 400px; height: 300px;"></div>
 			</div>
 		</div>

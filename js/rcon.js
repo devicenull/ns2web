@@ -122,22 +122,9 @@ function refreshPerformance(once)
 					entry.time *= 1000;
 					performance_data[0].push([entry.time,entry.players]);
 					performance_data[1].push([entry.time,entry.tickrate]);
-					//performance_data[1].push([entry.time,entry.tickrate]);
-					//performance_data[2].push(entry.tickrate);
 				}
-				console.log(performance_data);
-				$('#perfchart').empty();
-				$.jqplot('perfchart',performance_data,{
-					title: 'Server Performance',
-   					axes:{xaxis:{renderer:$.jqplot.DateAxisRenderer,tickOptions:{formatString:'%H:%m'},},yaxis:{min:0}},
-   					legend: {
-						show: true,
-						location: 'se',
-						labels: ['Players','Tickrate'],
-					},
-					seriesDefaults: { markerOptions: { show: false, }, },
-				});
 			}
+			showPerfChart()
 			perfpos = data.position;
 			if (performance_data.length == 0) setTimeout("refreshPerformance(false)",3000);
 			else if (!once)	setTimeout("refreshPerformance(false)",300000);
@@ -147,8 +134,26 @@ function refreshPerformance(once)
 			else if (!once)	setTimeout("refreshPerformance(false)",300000);
 		},
 	})
+}
 
+function performancecontent_onShow()
+{
+	showPerfChart();
+}
 
+function showPerfChart()
+{
+	$('#perfchart').empty();
+	$.jqplot('perfchart',performance_data,{
+		title: 'Server Performance',
+			axes:{xaxis:{renderer:$.jqplot.DateAxisRenderer,tickOptions:{formatString:'%H:%m'},},yaxis:{min:0}},
+			legend: {
+			show: true,
+			location: 'se',
+			labels: ['Players','Tickrate'],
+		},
+		seriesDefaults: { markerOptions: { show: false, }, },
+	});
 }
 
 function rcon(command)
@@ -191,16 +196,21 @@ function sendChatMessage()
 	}
 }
 
-function changeTab(newtab)
+function changeTab()
 {
-	$('#playerstab').removeClass('active');
-	$('#banstab').removeClass('active');
-	$('#performancetab').removeClass('active');
-	$('#playerscontent').hide();
-	$('#banscontent').hide();
-	$('#performancecontent').hide();
-	$('#'+newtab+'tab').addClass('active');
-	$('#'+newtab+'content').show();
+	$('#tabs > li').each(function()
+	{
+		$(this).removeClass('active');
+		$('#'+$(this).attr("rel")).hide();
+	});
+	$(this).addClass('active');
+	$('#'+($(this).attr("rel"))).show();
+
+	showFunc = window[$(this).attr("rel")+'_onShow'];
+	if (typeof showFunc == 'function')
+	{
+		showFunc();
+	}
 }
 
 $(document).ready(function() {
@@ -245,7 +255,7 @@ $(document).ready(function() {
 			'sv_reset',
 		]
 	});
-	changeTab('performance');
+	$('#tabs > li').click(changeTab);
 });
 
 
