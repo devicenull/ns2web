@@ -5,6 +5,9 @@ This project is designed as a replacement to the built in web interface in Natur
 
 Currently, there's a single PHP file here.  This is to overcome the restrictions on cross site javascript.  All it does is proxy requests from the web UI to the game server.  Once NS2 has the ability to serve static content, this page can be safely removed.
 
+Usage
+-----
+While the proxy script is in use, you need to create a file named '.logininfo' with your username and password for rcon, seperated by a colon.  For example: 'user:password'
 
 Libraries
 ---------
