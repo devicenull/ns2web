@@ -29,12 +29,7 @@ function refreshInfo()
 					$('#playerstable tbody').append(tmpl('player_row',player));
 				}
 			}
-			setTimeout("refreshInfo()",5000);
 		},
-		error: function ()
-		{
-			setTimeout("refreshInfo()",5000);
-		}
 	});
 }
 
@@ -74,9 +69,6 @@ function refreshBanList()
 				$('#banstable tbody').append(tmpl('ban_row',ban));
 			}
 		},
-		error: function () {
-			setTimeout("refreshBanList()",5000);
-		},
 	});
 }
 
@@ -98,17 +90,13 @@ function refreshChat(once)
 				$('#chatlog').prop({'scrollTop':$('#chatlog').prop('scrollHeight')});
 			}
 			chatpos = data.position;
-			if (!once)	setTimeout("refreshChat(false)",3000);
-		},
-		error:  function (data) {
-			if (!once)	setTimeout("refreshChat(false)",3000);
 		},
 	})
 }
 
 var perfpos = 0;
 var performance_data = [[],[]];
-function refreshPerformance(once)
+function refreshPerformance()
 {
 	$.ajax({
 		url: '/proxy.php',
@@ -126,12 +114,10 @@ function refreshPerformance(once)
 			}
 			showPerfChart()
 			perfpos = data.position;
-			if (performance_data.length == 0) setTimeout("refreshPerformance(false)",3000);
-			else if (!once)	setTimeout("refreshPerformance(false)",300000);
+			if (performance_data.length == 0) setTimeout("refreshPerformance()",3000);
 		},
 		error:  function (data) {
-			if (performance_data.length == 0) setTimeout("refreshPerformance(false)",3000);
-			else if (!once)	setTimeout("refreshPerformance(false)",300000);
+			if (performance_data.length == 0) setTimeout("refreshPerformance()",3000);
 		},
 	})
 }
@@ -167,7 +153,7 @@ function rcon(command)
 	}
 	if (lowerCommand.indexOf('sv_say') != -1 || lowerCommand.indexOf('sv_tsay') != -1 || lowerCommand.indexOf('sv_psay') != -1)
 	{
-		setTimeout("refreshChat(true)",500);
+		setTimeout("refreshChat()",500);
 	}
 }
 
@@ -217,10 +203,10 @@ $(document).ready(function() {
 	$(document).on("click", ".rconbutton", function() {
 		rcon($(this).attr('command'));
 	});
-	refreshInfo();
-	refreshBanList();
-	refreshChat(false);
-	refreshPerformance(false)
+	setInterval(refreshInfo,3000); refreshInfo();
+	setInterval(refreshChat,3000); refreshChat();
+	setInterval(refreshBanList,300000); refreshBanList();
+	setInterval(refreshPerformance,300000); refreshPerformance();
 	$('input[name=manual_rcon]').bind('keypress', function (e) {
 		if (e.keyCode == 13) /* Enter */
 		{
