@@ -38,7 +38,7 @@
 				<span class="icon-bar"></span>
 				<span class="icon-bar"></span>
 			  </a>
-			  <a class="brand" href="#">NS2 Web Admin</a>
+			  <a class="brand" href="#" id="servername">NS2 Web Admin</a>
 			  <div class="nav-collapse">
 				<ul class="nav" id="tabs">
 				  <li rel="playerscontent" class="active"><a href="#">Players</a></li>
@@ -46,6 +46,13 @@
 				  <li rel="performancecontent"><a href="#">Performance</a></li>
 				</ul>
 			  </div><!--/.nav-collapse -->
+			  <div class="pull-right" style="color: white; padding-top: 9px;">
+					<span id="serverplayers"></span> on <span id="servermap"></span>&nbsp;&nbsp;
+					<span class="icon-arrow-up icon-white" title="Uptime"></span><span id="serveruptime"></span>&nbsp;&nbsp;
+					<span class="icon-retweet icon-white" title="Tickrate"></span> <span id="serverrate"></span>&nbsp;&nbsp;
+					<img src="/img/marine.png" title="Marine Res"> <span id="marineres"></span>&nbsp;&nbsp;
+					<img src="/img/alien.png" title="Alien Res"> <span id="alienres"></span>
+			  </div>
 			</div>
 		  </div>
 		</div>
@@ -104,14 +111,6 @@
 		<div class="span10">
 			<div class="row">
 				<div id="playerscontent">
-					<div style="width: 400px; margin-left: auto; margin-right: auto; text-align: center;">
-						<h3>
-							<span id="servername"></span>
-						</h3>
-						<span id="serverplayers"></span> on <span id="servermap"></span><br>
-						Uptime: <span id="serveruptime"></span> Tickrate: <span id="serverrate"></span><br>
-						Marines: <span id="marineres"></span> res Aliens: <span id="alienres"></span> res
-					</div>
 					<table class="table table-striped" id="playerstable">
 						<thead>
 							<th>Name</th>
