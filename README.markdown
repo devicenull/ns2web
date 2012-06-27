@@ -16,3 +16,6 @@ This project makes use of the following:
 * jQuery
 * jqPlot
 
+Building
+---------
+The js/baselibs.js file was created by concatinating minified versions of the Javascript in js_src into one file.  This was done to minimize the number of HTTP requests required to display this content.  We could decrease that to around 60KB by gzipping it, but it's unlikely that the built in web server would know how to properly handle gzip'd files.
