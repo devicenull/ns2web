@@ -99,26 +99,29 @@ function refreshChat(once)
 	})
 }
 
-var perfpos = 0;
+var lastPerfTime = 0;
 var performance_data = [[],[]];
 function refreshPerformance()
 {
 	$.ajax({
 		url: '/proxy.php',
-		data: {'request': 'getperfdata', 'position': perfpos},
+		data: {'request': 'getperfdata'},
 		success: function(data) {
-			if (data.perfdata.length > 0)
+			if (data.length > 0)
 			{
-				for (i=0;i<data.perfdata.length;i++)
+				for (i=0;i<data.length;i++)
 				{
-					entry = data.perfdata[i];
+					entry = data[i];
 					entry.time *= 1000;
+					if (entry.time < lastPerfTime) continue;
+
 					performance_data[0].push([entry.time,entry.players]);
 					performance_data[1].push([entry.time,entry.tickrate]);
+					lastPerfTIme = entry.time;
 				}
 			}
-			showPerfChart()
-			perfpos = data.position;
+			showPerfChart();
+
 			if (performance_data.length == 0) setTimeout("refreshPerformance()",3000);
 		},
 		error:  function (data) {
@@ -158,7 +161,7 @@ function rcon(command)
 	}
 	if (lowerCommand.indexOf('sv_say') != -1 || lowerCommand.indexOf('sv_tsay') != -1 || lowerCommand.indexOf('sv_psay') != -1)
 	{
-		setTimeout("refreshChat()",500);
+		//setTimeout("refreshChat()",500);
 	}
 }
 
@@ -222,9 +225,10 @@ $(document).ready(function() {
 		rcon($(this).attr('command'));
 	});
 	setInterval(refreshInfo,3000); refreshInfo();
-	setInterval(refreshChat,3000); refreshChat();
+	// Chat support is currently not implemented in the engine.
+	//setInterval(refreshChat,3000); refreshChat();
 	setInterval(refreshBanList,300000); refreshBanList();
-	setInterval(refreshPerformance,300000); refreshPerformance();
+	setInterval(refreshPerformance,60000); refreshPerformance();
 	$('input[name=manual_rcon]').bind('keypress', function (e) {
 		if (e.keyCode == 13) /* Enter */
 		{
