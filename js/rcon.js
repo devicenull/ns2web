@@ -1,7 +1,7 @@
 function refreshInfo()
 {
 	$.ajax({
-		url: '/proxy.php',
+		url: '/',
 		data: {'request': 'json'},
 		success: function (data){
 			if (data != null)
@@ -64,7 +64,7 @@ function secondsToTime(seconds)
 function refreshBanList()
 {
 	$.ajax({
-		url: '/proxy.php',
+		url: '/',
 		data: {'request': 'getbanlist'},
 		success: function (data) {
 			$('#banstable tbody').empty();
@@ -81,7 +81,7 @@ var chatpos = 0;
 function refreshChat(once)
 {
 	$.ajax({
-		url: '/proxy.php',
+		url: '/',
 		data: {'request': 'getchatlog', 'position': chatpos},
 		success: function(data) {
 			if (data.chat != "")
@@ -104,7 +104,7 @@ var performance_data = [[],[]];
 function refreshPerformance()
 {
 	$.ajax({
-		url: '/proxy.php',
+		url: '/',
 		data: {'request': 'getperfdata'},
 		success: function(data) {
 			if (data.length > 0)
@@ -152,7 +152,7 @@ function showPerfChart()
 
 function rcon(command)
 {
-	$.get('/proxy.php?request=json&command=Send&rcon='+command);
+	$.get('/?request=json&command=Send&rcon='+command);
 
 	lowerCommand = command.toLowerCase();
 	if (lowerCommand.indexOf('sv_ban') != -1 || lowerCommand.indexOf('sv_unban') != -1)
