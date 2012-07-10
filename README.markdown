@@ -1,13 +1,10 @@
 NS2Web
 ------
-
-This project is designed as a replacement to the built in web interface in Natural Selection 2.  All of this code is designed to work without requiring any specific server-side processing, it uses JSON to communicate with the actual game server.
-
-Currently, there's a single PHP file here.  This is to overcome the restrictions on cross site javascript.  All it does is proxy requests from the web UI to the game server.  Once NS2 has the ability to serve static content, this page can be safely removed.
+This project replaces the old NS2 web interface.  It's designed to run entirely client side, and communicates with the actual game server via a number of JSON calls.  This interface requires NS2 Build 213 or higher to function correctly.
 
 Usage
 -----
-While the proxy script is in use, you need to create a file named '.logininfo' with your username and password for rcon, seperated by a colon.  For example: 'user:password'
+Copy all the files to your NS2 web directory (where .htpasswd is), then append /index.html to your usual rcon URL.  For example, if you would normally go to http://localhost:8080 to get to the web interface, go to http://localhost:8080/index.html instead.
 
 Libraries
 ---------
