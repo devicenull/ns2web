@@ -4,6 +4,7 @@ body {
 #chatlog
 {
 	height: 300px;
+	overflow: auto;
 }
 #serverstatus
 {

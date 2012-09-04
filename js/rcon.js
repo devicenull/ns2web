@@ -77,24 +77,25 @@ function refreshBanList()
 	});
 }
 
-var chatpos = 0;
+var maxChatPos = 0;
 function refreshChat(once)
 {
 	$.ajax({
 		url: '/',
-		data: {'request': 'getchatlog', 'position': chatpos},
+		data: {'request': 'getchatlist'},
 		success: function(data) {
-			if (data.chat != "")
+			for (i=0;i<data.length;i++)
 			{
-				for (i=0;i<data.chat.length;i++)
-				{
-					entry = data.chat[i];
-					$('#chatlog').html($('#chatlog').html()+entry+'<br>');
-				}
+				entry = data[i];
 
-				$('#chatlog').prop({'scrollTop':$('#chatlog').prop('scrollHeight')});
+				if (entry.id > maxChatPos)
+				{
+					$('#chatlog').append(tmpl('chat_row',entry));
+					maxChatPos = entry.id;
+				}
 			}
-			chatpos = data.position;
+
+			$('#chatlog').prop({'scrollTop':$('#chatlog').prop('scrollHeight')});
 		},
 	})
 }
@@ -226,7 +227,7 @@ $(document).ready(function() {
 	});
 	setInterval(refreshInfo,3000); refreshInfo();
 	// Chat support is currently not implemented in the engine.
-	//setInterval(refreshChat,3000); refreshChat();
+	setInterval(refreshChat,2000); refreshChat();
 	setInterval(refreshBanList,300000); refreshBanList();
 	setInterval(refreshPerformance,60000); refreshPerformance();
 	$('input[name=manual_rcon]').bind('keypress', function (e) {
