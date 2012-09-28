@@ -262,6 +262,8 @@ $(document).ready(function() {
 			'sv_tournament',
 			'sv_cheats',
 			'sv_reset',
+			'sv_listbans',
+			'cyclemap'
 		]
 	});
 	$('#tabs > li').click(changeTab);
