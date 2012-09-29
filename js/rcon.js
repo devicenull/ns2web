@@ -262,6 +262,13 @@ $(document).ready(function() {
 			'sv_tournament',
 			'sv_cheats',
 			'sv_reset',
+			'sv_listbans',
+			'cyclemap',
+			'sv_autobalance',
+			'kick',
+			'status',
+			'say',
+			'reset'
 		]
 	});
 	$('#tabs > li').click(changeTab);
