@@ -263,7 +263,12 @@ $(document).ready(function() {
 			'sv_cheats',
 			'sv_reset',
 			'sv_listbans',
-			'cyclemap'
+			'cyclemap',
+			'sv_autobalance',
+			'kick',
+			'status',
+			'say',
+			'reset'
 		]
 	});
 	$('#tabs > li').click(changeTab);
