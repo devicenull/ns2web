@@ -272,6 +272,10 @@ $(document).ready(function() {
 		]
 	});
 	$('#tabs > li').click(changeTab);
+
+	$( "#maplist_active, #maplist_available" ).sortable({
+			connectWith: ".maplist"
+		}).disableSelection();
 });
 
 
@@ -310,3 +314,55 @@ $(document).ready(function() {
 	return data ? fn( data ) : fn;
   };
 })();
+
+var _mapCycle = { };
+var _maps     = [ "ns2_summit", "ns2_mineshaft", "ns2_tram", "ns2_docking" ];
+
+function mapcycle_onShow()
+{
+	refreshMapCycle();
+	refreshMaps();
+}
+
+function refreshMapCycle()
+{
+	$.ajax({
+		url: '/',
+		data: {'request': 'getmapcycle'},
+		success: function(data) {
+			_mapCycle = data;
+			$('#map_cycle_time').val(_mapCycle.time);
+			$('#map_cycle_order').val(_mapCycle.mode == "random" ? "Random" : "In order");
+			$("#maplist_active").empty();
+
+			if (_mapCycle.mods)
+			{
+				for (i=0;i<_mods.length; ++i)
+				{
+					var includeMod = _mapCycle.mods.indexOf(_mods[i].id) != -1;
+					$("#mod_" + _mods[i].id).attr('checked', includeMod);
+				}
+			}
+
+			for (i=0;i<_mapCycle.maps.length;i++)
+			{
+				// Remove from the available list.
+				$("#" + _mapCycle.maps[i]).remove();
+
+				var entry = { name: _mapCycle.maps[i] };
+				$('#maplist_active').append(tmpl('map', entry));
+			}
+		},
+	})
+}
+
+function refreshMaps()
+{
+	$('#maplist_available').empty();
+	for (i=0;i<_maps.length;i++)
+	{
+		var entry = { name: _maps[i] };
+		$('#maplist_available').append(tmpl('map', entry));
+	}
+	//refreshModList();
+}

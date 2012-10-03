@@ -10,9 +10,11 @@
 	<link href="css/bootstrap-responsive.css" rel="stylesheet">
 	<link href="css/jquery.jqplot.css" rel="stylesheet">
 	<link href="css/ns2web.css" rel="stylesheet">
+	<link type="text/css" href="css/dark-hive/jquery-ui-1.8.24.custom.css" rel="stylesheet" />
 
 	<script src="js/baselibs.js"></script>
 	<script src="js/rcon.js"></script>
+	<script src="js/ui.js"></script>
   </head>
 
 	<body>
@@ -30,6 +32,7 @@
 				  <li rel="playerscontent" class="active"><a href="#">Players</a></li>
 				  <li rel="banscontent"><a href="#">Bans</a></li>
 				  <li rel="performancecontent"><a href="#">Performance</a></li>
+				  <li rel="mapcycle"><a href="#">Map Cycle</a></li>
 				</ul>
 			  </div><!--/.nav-collapse -->
 			  <div class="pull-right" id="serverstatus">
@@ -108,6 +111,10 @@
 				(All) <%=player%>: <%=message%>
 			<% } %>
 			<br>
+		</script>
+
+		<script type="text/html" id="map">
+			<li class="ui-state-default" id="<%=name%>"><%=name%></li>
 		</script>
 
 		<div class="span1">&nbsp;</div>
@@ -194,6 +201,28 @@
 			</div>
 			<div class="row" id="performancecontent">
 				<div id="perfchart"></div>
+			</div>
+
+			<div class="row" id="mapcycle">
+				<div id="map_cycle_options">
+					<label for="map_cycle_time">Time between maps:</label>
+					<input type="text" id="map_cycle_time" class="ui-state-default"></input> minutes</br>
+
+					<label for="map_cycle_order">Map progression:</label>
+					<select id="map_cycle_order" class="ui-state-default">
+						<option>In order</option>
+						<option>Random</option>
+					</select>
+
+				</div>
+
+				<p>Drag and drop maps from the right pane to the left pane to add them to the map cycle</p>
+				<ul id="maplist_active" id="sortable" class="maplist">
+				</ul>
+				<ul id="maplist_available" id="sortable" class="maplist">
+				</ul>
+
+				<button id='savebutton'>Save</button>
 			</div>
 		</div>
 	</body>
