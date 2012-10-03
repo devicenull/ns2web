@@ -28,7 +28,53 @@ input[name=chat_message]
 	width: 400px;
 	height: 300px;
 }
-#banscontent, #performancecontent
+#banscontent, #performancecontent, #mapcycle
 {
 	display: none;
+}
+
+#modlist, .maplist li {
+	list-style-type: none;
+}
+
+#modlist, .maplist {
+	border:			1px solid #CCC;
+	width:			300px;
+	padding:		10px;
+	font-weight: 	bold;
+	color: 			#1C94C4;
+}
+
+.maplist {
+	height:		300px;
+}
+
+.maplist { list-style-type: none; }
+.maplist li { margin: 5px 5px 5px 5px; padding: 0.4em; padding-left: 1.5em; height: 18px; cursor:move; }
+.maplist li span { position: absolute; margin-left: -1.3em; }
+
+.maplist {
+	float:		left;
+}
+
+#maplist_available {
+	margin-left:	10px;
+}
+
+#map_cycle_options {
+	clear:		both;
+}
+
+#savebutton {
+	display:	block;
+	clear:		left;
+}
+
+#map_cycle_options label {
+	display:		inline-block;
+	width: 			150px;
+}
+
+#map_cycle_order, #map_cycle_time {
+	width:		100px;
 }
