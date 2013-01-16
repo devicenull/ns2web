@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+	<meta charset="utf-8">
+	<title>NS2 Web Admin</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="author" content="Brian Rak">
+
+	<link href="css/bootstrap.css" rel="stylesheet">
+	<link href="css/bootstrap-responsive.css" rel="stylesheet">
+	<link href="css/jquery.jqplot.css" rel="stylesheet">
+	<link href="css/ns2web.css" rel="stylesheet">
+	<link href="css/mapcycle.css" rel="stylesheet">
+	<link href="css/modbrowser.css" rel="stylesheet">
+
+	<script src="js/baselibs.js"></script>
+	<script src="js/jquery-ui-1.9.0.custom.min.js"></script>
+	<script src="js/rcon.js"></script>
+	<script src="js/modbrowser.js"></script>
+	<script src="js/mapcycle.js"></script>
+  </head>
+
+	<body>
+		<div class="navbar navbar-fixed-top">
+		  <div class="navbar-inner">
+			<div class="container">
+			  <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			  </a>
+			  <a class="brand" href="#" id="servername">NS2 Web Admin</a>
+			  <div class="nav-collapse">
+				<ul class="nav" id="tabs">
+				  <li rel="mapscontent" class="active"><a href="#">Maps</a></li>
+			      <li rel="modscontent"><a href="#" id="tab_mods">Mods</a></li>
+				  <li rel="playerscontent"><a href="#">Players</a></li>
+				  <li rel="banscontent"><a href="#">Bans</a></li>
+				  <li rel="performancecontent"><a href="#">Performance</a></li>
+				</ul>
+			  </div><!--/.nav-collapse -->
+			  <div class="pull-right" id="serverstatus">
+					<span id="serverplayers"></span> on <span id="servermap"></span>&nbsp;&nbsp;
+					<span class="icon-arrow-up icon-white" title="Uptime"></span><span id="serveruptime"></span>&nbsp;&nbsp;
+					<span class="icon-retweet icon-white" title="Tickrate"></span> <span id="serverrate"></span>&nbsp;&nbsp;
+					<img src="img/marine.png" title="Marine Res"> <span id="marineres"></span>&nbsp;&nbsp;
+					<img src="img/alien.png" title="Alien Res"> <span id="alienres"></span>
+			  </div>
+			</div>
+		  </div>
+		</div>
+
+		<script type="text/html" id="player_row">
+			<tr>
+				<td><%=name%></td>
+				<td><%=steamid%></td>
+				<td><%=ipaddress%></td>
+				<td><%=humanTeam%></td>
+				<td><%=score%></td>
+				<td><%=kills%>/<%=deaths%></td>
+				<td><%=resources%></td>
+				<td><%=ping%></td>
+				<td>
+					<div class="btn-group">
+						<button class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+							Action
+							<span class="caret"></span>
+						</button>
+						<ul class="dropdown-menu">
+							<li>
+								<a href="#" class="rconbutton" command="sv_kick <%=steamid%>">Kick</a>
+								<a href="#" class="rconbutton" command="sv_ban <%=steamid%> 1440 WebUI">Ban (24 hours)</a>
+								<a href="#" class="rconbutton" command="sv_ban <%=steamid%> 0 WebUI">Ban (Forever)</a>
+								<a href="#" class="rconbutton" command="sv_mute <%=steamid%>">Mute</a>
+								<a href="#" class="rconbutton" command="sv_slay <%=steamid%>">Slay</a>
+								<% if (team == 1) { %>
+									<a href="#" class="rconbutton" command="sv_switchteam <%=steamid%> 2">Move to Aliens</a>
+								<% } else if (team == 2) { %>
+									<a href="#" class="rconbutton" command="sv_switchteam <%=steamid%> 1">Move to Marines</a>
+								<% } else { %>
+									<a href="#" class="rconbutton" command="sv_switchteam <%=steamid%> 1">Move to Marines</a>
+									<a href="#" class="rconbutton" command="sv_switchteam <%=steamid%> 2">Move to Aliens</a>
+								<% } %>
+								<% if (iscomm == 1) { %>
+									<a href="#" class="rconbutton" command="sv_eject <%=steamid%>">Eject</a>
+								<% } %>
+							</li>
+						</ul>
+					</div>
+				</td>
+			</tr>
+		</script>
+
+		<script type="text/html" id="ban_row">
+			<tr>
+				<td><%=name%></td>
+				<td><%=id%></td>
+				<td><%=time%></td>
+				<td><%=reason%></td>
+				<td><button class="rconbutton btn btn-primary" command="sv_unban <%=id%>">Unban</button></td>
+			</tr>
+		</script>
+
+		<script type="text/html" id="chat_row">
+			<% if (teamOnly == true) { %>
+				<% if (team == 0) { %>
+					(Spectator)
+				<% } else if (team == 1) { %>
+					(Marine)
+				<% } else if (team == 2) { %>
+					(Alien)
+				<% } %>
+				<%=player%>: <%=message%>
+			<% } else { %>
+				(All) <%=player%>: <%=message%>
+			<% } %>
+			<br>
+		</script>
+		
+		<script type="text/html" id="modbrowser_mod">
+			<li class="modbrowser_mod" id="modbrowser_mod_<%=id%>">
+				<img class="modbrowser_mod_thumbnail" src="<%=thumbnail%>" width="200px" height="200px">
+				<div class="modbrowser_mod_details"><%=description%></div>
+				<div class="modbrowser_mod_subscribe"></div>
+				<span class="modbrowser_mod_title"><%=title%></span>
+			</li>
+		</script>	
+
+		<script type="text/html" id="mapcycle_mod">
+			<li><input type="checkbox" class="checkbox" id="mapcycle_mod_<%=id%>"><%=name%><br></li>
+		</script>
+
+		<script type="text/html" id="map">
+			<li class="mapcycle_map btn btn-primary" id="<%=name%>"><%=name%></li>
+		</script>
+	
+
+		<div class="span1">&nbsp;</div>
+		<div class="span10">
+		
+			<div class="row" id="mapscontent">
+				<div id='mappanel' class='well'>
+				
+					<div id="map_cycle_options">
+						<h3>Map Cycle</h3>
+						<label for="map_cycle_time">Time between maps:</label>
+						<input type="text" id="map_cycle_time" class="ui-state-default"></input> minutes</br>
+						<label for="map_cycle_order">Map progression:</label>
+						<select id="map_cycle_order" class="ui-state-default">
+							<option>In order</option>
+							<option>Random</option>
+						</select>
+					</div>
+
+					<div class="mapcycle_map_panel">
+						<h3>Active Maps</h3>
+						<ul id="maplist_active" id="sortable" class="maplist">
+						</ul>
+					</div>
+					
+					<div class="mapcycle_map_panel">
+						<h3>Available Maps</h3>
+						<ul id="maplist_available" id="sortable" class="maplist">
+						</ul>
+					</div>
+
+					<div class="mapcycle_map_panel">
+						<h3>Installed Mods</h3>
+						<ol id='mapcycle_modlist'>
+						</ol>
+					</div>
+					
+					<div class='clearfix'></div>
+					
+					<div id="mapcycle_maps_hint">
+						<p>
+						Drag and drop maps from the Available list to the Active list to add them to the map cycle.
+						Maps can be dragged within a list to change their order (if the map progression is set to "In order").
+						</p>
+					</div>
+					
+					<div id="mapcycle_mods_hint">
+						<p>Select the installed mods you would like to be active on the server. Mods can be installed from the Mods Tab</p>
+					</div>
+					
+					<div class='clearfix'></div>
+					
+				</div>	
+			</div>
+		
+			<div class="row" id="modscontent">
+				<div id='modbrowser' class='well'>
+					<ol id="modbrowser_mods"></ol>
+					<div id="modbrowser_loading"></div>
+					<button id="modbrowser_prev_button" class="btn">Prev</button>
+					<button id="modbrowser_next_button" class="btn">Next</button>
+				</div>
+			</div>
+		
+			<div class="row">
+				<div id="playerscontent">
+					<table class="table table-striped" id="playerstable">
+						<thead>
+							<th>Name</th>
+							<th>Steamid</th>
+							<th>IP Address</th>
+							<th>Team</th>
+							<th>Score</th>
+							<th>Kills/Deaths</th>
+							<th>Resources</th>
+							<th>Ping</th>
+							<th>Actions</th>
+						</thead>
+						<tbody>
+						</tbody>
+					</table>
+					<div class="btn-toolbar center">
+						<div class="btn-group">
+							<button class="btn btn-danger rconbutton" command="sv_reset">Reset Round</button>
+						</div>
+						<div class="btn-group">
+							<button class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+								Change Map
+								<span class="caret"></span>
+							</button>
+							<ul class="dropdown-menu">
+								<li>
+									<a href="#" class="rconbutton" command="sv_changemap ns2_docking">ns2_docking</a>
+									<a href="#" class="rconbutton" command="sv_changemap ns2_mineshaft">ns2_mineshaft</a>
+									<a href="#" class="rconbutton" command="sv_changemap ns2_summit">ns2_summit</a>
+									<a href="#" class="rconbutton" command="sv_changemap ns2_tram">ns2_tram</a>
+									<a href="#" class="rconbutton" command="sv_changemap ns2_veil">ns2_veil</a>
+								</li>
+							</ul>
+						</div>
+						<div class="btn-group">
+							<button class="btn btn-primary rconbutton" command="sv_rrall">All to Ready Room</button>
+						</div>
+						<div class="btn-group">
+							<button class="btn btn-primary rconbutton" command="sv_randomall">All to Random Teams</button>
+						</div>
+					</div>
+					<div class="well form-inline center">
+						RCON Command:
+						<input type="text" name="manual_rcon" value="" class="input-medium">
+						<button class="btn btn-primary" onclick="sendManualRcon()">Send</button>
+					</div>
+					<div class="well" id="chatlog"></div>
+					<div class="well form-inline">
+						<select name="chatmessagetype" class="input-small">
+							<option value="all">All</option>
+							<option value="marines">Marines</option>
+							<option value="aliens">Aliens</option>
+						</select>
+						<input type="text" name="chat_message" value="" class="input-medium">
+						<button class="btn btn-primary" onclick="sendChatMessage()">Send</button>
+					</div>
+				</div>
+			</div>
+			<div class="row" id="banscontent">
+				<table class="table table-striped" id="banstable">
+						<thead>
+							<th>Name</th>
+							<th>Steamid</th>
+							<th>Time</th>
+							<th>Reason</th>
+						</thead>
+						<tbody>
+						</tbody>
+						<tfoot>
+							<td>New Ban</td>
+							<td><input type="text" name="addban_steamid" placeholder="SteamID"></td>
+							<td><input type="text" name="addban_duration" placeholder="Time (minutes)"></td>
+							<td><input type="text" name="addban_reason" placeholder="Reason"></td>
+							<td><button class="btn btn-primary" onclick="sendManualBan()">Add Ban</button></td>
+						</tfoot>
+
+				</table>
+			</div>
+			<div class="row" id="performancecontent">
+				<div id="perfchart"></div>
+			</div>
+		</div>
+	</body>
+</html>
