@@ -1,0 +1,109 @@
+#modbrowser {	
+	margin:		0px auto;
+	position:	relative;
+}
+
+#modbrowser_mods {
+	list-style-type: 	none;
+	padding: 			0;
+	width:				660px;
+	height: 			754px;
+	margin:				0;
+}
+
+.modbrowser_mod {
+	float: 		left;
+	width:		200px;
+	padding:	10px;
+	margin:		0;
+	position:	relative;
+}
+
+.modbrowser_mod_thumbnail {
+	border:		1px solid #101010;
+}
+
+.modbrowser_mod_thumbnail:hover {
+	border:		1px solid #5487C7;
+}
+
+.modbrowser_mod_title {
+	display:	block;
+	overflow:	hidden;
+	width:		200px;
+	height:		20px;
+	padding-top:	5px;
+}
+
+.modbrowser_mod_details {
+	margin:		10px;
+	padding:	10px;
+	width:		300px;
+	border:		1px solid  #82807C;
+	position:	absolute;
+	top:		0;
+	left:		220px;
+	display:	none;
+	background:	#3B3938;
+	z-index:	1;
+	box-shadow: 3px 3px 1px rgba(0, 0, 0, 0.5);
+	min-height:	40px;
+}
+
+.modbrowser_mod_details:after {
+  position: absolute;
+  display: inline-block;
+  border-top: 12px solid transparent;
+  border-right: 12px solid #3B3938;
+  border-bottom: 12px solid transparent;
+  left: -10px;
+  top: 21px;
+  content: '';
+}
+
+.modbrowser_mod_details:before {
+  position: absolute;
+  display: inline-block;
+  border-top: 12px solid transparent;
+  border-right: 12px solid #82807C;
+  border-bottom: 12px solid transparent;
+  left: -12px;
+  top: 21px;
+  content: '';
+}
+
+.modbrowser_mod_thumbnail:hover  + .modbrowser_mod_details {
+	display:	block;
+}
+
+.modbrowser_mod_subscribe {
+	display:	block;
+	position:	absolute;
+	left:		175px;
+	top:		175px;	
+	width:		25px;
+	height:		25px;
+	cursor:		pointer;
+	background:	url('../img/btn_subscribe_states.png') no-repeat;
+}
+
+.modbrowser_mod_subscribe:hover {
+	background-position: 0 -25px;
+}
+
+.modbrowser_mod_subscribe.subscribed {
+	background-position: 0 -50px;
+}
+
+.modbrowser_mod_subscribe.subscribed:hover {
+	background-position: 0 -75px;
+}
+
+#modbrowser_loading {
+	width:		670px;
+	height:		745px;
+	position:	absolute;
+	background:	rgba(0, 0, 0, 0.75) url('../img/spinner.gif') no-repeat center center;
+   left:		15px;
+   top:			15px;
+}

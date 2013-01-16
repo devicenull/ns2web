@@ -1,0 +1,41 @@
+body {
+	padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+}
+#chatlog
+{
+	height: 300px;
+	overflow: auto;
+}
+#serverstatus
+{
+	color: white;
+	padding-top: 9px;
+}
+input[name=manual_rcon]
+{
+	width: 500px;
+}
+input[name=chat_message]
+{
+	width: 80%;
+}
+.center
+{
+	text-align: center;
+}
+#perfchart
+{
+	width: 400px;
+	height: 300px;
+}
+
+#modscontent, #playerscontent, #banscontent, #performancecontent
+{
+	display: none;
+}
+
+.span10 {
+	margin:				0px auto;
+	width:				1000px;
+	float:				none;
+}
