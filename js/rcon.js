@@ -1,3 +1,18 @@
+refreshCount = 0;
+
+String.prototype.toHHMMSS = function () {
+    sec_numb    = parseInt(this);
+    var hours   = Math.floor(sec_numb / 3600);
+    var minutes = Math.floor((sec_numb - (hours * 3600)) / 60);
+    var seconds = sec_numb - (hours * 3600) - (minutes * 60);
+
+    if (hours   < 10) {hours   = "0"+hours;}
+    if (minutes < 10) {minutes = "0"+minutes;}
+    if (seconds < 10) {seconds = "0"+seconds;}
+    var time    = hours+':'+minutes+':'+seconds;
+    return time;
+}
+
 function refreshInfo()
 {
 	$.ajax({
@@ -7,19 +22,30 @@ function refreshInfo()
 			if (data != null)
 			{	// NS2 has a bug where it sometimes returns no data.  Don't error if that happens
 				$('#servermap').html(data.map);
-				$('#serverplayers').html(data.players_online+' players');
+
 				$('#serveruptime').html(secondsToTime(data.uptime));
 				$('#marineres').html(data.marine_res);
 				$('#alienres').html(data.alien_res);
 				$('#servername').html(data.server_name);
-				$('#serverrate').html(Math.round(data.frame_rate*100)/100);
+				$('#serverrate').html((Math.round(data.frame_rate*100)/100).toFixed(2));
 
-				$('#playerstable tbody').empty();
+
+				var prevRefreshCount = $("#playerstable tr td").find(".lastupdated").val();
+				if( typeof( prevRefreshCount ) === 'undefined' )
+					prevRefreshCount = 0;
+
+				var currentTime = (new Date()).getTime() / 1000;
+				var connectionTime = currentTime;
+				var playerElem;
 				for (i=0;i<data.player_list.length;i++)
 				{
 					player = data.player_list[i];
 					player.humanTeam = player.team
-					if (player.team == 1)
+					if (player.team == 0)
+					{
+						player.humanTeam = 'Ready Room';
+					}
+					else if (player.team == 1)
 					{
 						player.humanTeam = 'Marines';
 					}
@@ -27,12 +53,83 @@ function refreshInfo()
 					{
 						player.humanTeam = 'Aliens';
 					}
-					$('#playerstable tbody').append(tmpl('player_row',player));
+					else if (player.team == 3)
+					{
+						player.humanTeam = 'Spectator';
+					}
+
+					if (player.iscomm)
+					{
+						player.humanTeam = player.humanTeam + ' (*)';
+					}
+
+					playerElem = $("#playerstable ." + player.steamid);
+
+					if( playerElem.length == 0 )
+					{
+						player.lastupdated = refreshCount;
+						player.connTimeFormatted = "" + ("" + (connectionTime - currentTime)).toHHMMSS();
+						player.connTime = currentTime;
+						player.resources = player.resources.toFixed(2);
+
+						$('#playerstable tbody').append(tmpl('player_row',player));
+					}
+					else
+					{
+						playerElem.find(".name").text( player.name );
+						playerElem.find(".team").text( player.humanTeam );
+						playerElem.find(".score").text( player.score );
+						playerElem.find(".kd").text( player.kills + '/' + player.deaths );
+						playerElem.find(".res").text( Math.floor(player.resources) );
+						playerElem.find(".ping").text( player.ping );
+
+						connTime = currentTime - parseInt(playerElem.find(".connectiontime").val());
+						playerElem.find(".connTime").text( ("" + connTime).toHHMMSS() );
+						playerElem.find(".lastupdated").val( refreshCount );
+
+						playerElem.attr("id", refreshCount );
+					}
 				}
-				if (data.player_list.length == 0)
+
+				//if( prevRefreshCount != 0 )
+				//	$("#" + prevRefreshCount ).remove();
+
+				if (data.player_list.length == 0 ) {
+					if( $("#playerstable #noplayers").length == 0 ) {
+						$('#playerstable tbody').append('<tr id="noplayers"><td colspan="10" style="text-align: center;">No Connected Players</td></tr>');
+					}
+				} else {
+					$("#noplayers").remove();
+
+					if( refreshCount == 0 ) {
+						$("#playerstable").tablesorter({sortList:[[9,0]]});
+					} else {
+						$("#playerstable").trigger("update");
+					}
+				}
+
+				playerRows = $("#playerstable tr");
+				playerRows.each( function(i) {
+					if( i == 0 )
+						return;
+
+					if( $(this).attr("id") != refreshCount )
+						$(this).remove();
+					else
+						$(this).find("td.num").text( parseInt(i ) + "." );
+				});
+
+				if (data.player_list.length == 1)
 				{
-					$('#playerstable tbody').append('<tr><td colspan="9" style="text-align: center;">No Connected Players</td></tr>');
+					$('#serverplayers').html(parseInt(data.player_list.length)+' player');
 				}
+				else
+				{
+					$('#serverplayers').html(parseInt(data.player_list.length)+' players');
+				}
+				//$('#serverplayers').html(parseInt(playerRows.length-1)+' players');
+
+				refreshCount = refreshCount + 1;
 			}
 		},
 	});
@@ -172,6 +269,14 @@ function sendManualRcon()
 	$('input[name=manual_rcon]').val('');
 }
 
+function sendConfirmedRcon(message, command)
+{
+	var r=confirm(message);
+	if (r==true) {
+		rcon(command);
+	}
+}
+
 function sendChatMessage()
 {
 	chatType = $('select[name=chatmessagetype]').val();
@@ -221,11 +326,17 @@ function changeTab()
 	}
 }
 
+
+
+
 $(document).ready(function() {
 	$(document).on("click", ".rconbutton", function() {
 		rcon($(this).attr('command'));
 	});
-	setInterval(refreshInfo,3000); refreshInfo();
+
+
+
+	setInterval(refreshInfo,2000); refreshInfo();
 	// Chat support is currently not implemented in the engine.
 	setInterval(refreshChat,2000); refreshChat();
 	setInterval(refreshBanList,300000); refreshBanList();
