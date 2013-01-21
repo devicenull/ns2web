@@ -184,7 +184,9 @@ function refreshChat(once)
 			for (i=0;i<data.length;i++)
 			{
 				entry = data[i];
-
+				entry.player = decodeURIComponent(entry.player.replace(/(25){5,}/g, "").replace(/(\+|\%2B)/g, "%20"));
+				entry.message = decodeURIComponent(entry.message.replace(/(25){5,}/g, "").replace(/(\+|\%2B)/g, "%20"));
+				
 				if (entry.id > maxChatPos)
 				{
 					$('#chatlog').append(tmpl('chat_row',entry));
