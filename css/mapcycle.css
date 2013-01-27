@@ -58,12 +58,11 @@
 
 #mapcycle_maps_hint, #mapcycle_mods_hint {
 	margin-top:	10px;
-	padding:	10px;
+	padding:	10px 10px 0px 10px;
 	border:		1px solid  #82807C;
 	background:	#3B3938;
 	z-index:	1;
 	box-shadow: 3px 3px 1px rgba(0, 0, 0, 0.5);
-	height:		50px;
 }
 
 #mapcycle_maps_hint {

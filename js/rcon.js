@@ -273,9 +273,15 @@ function sendManualRcon()
 
 function sendConfirmedRcon(message, command)
 {
-	var r=confirm(message);
-	if (r==true) {
+	if (confirm(message)) {
 		rcon(command);
+	}
+}
+
+function confirmMapChange(map)
+{
+	if(confirm('Change map to '+map+'?')) {
+		rcon('sv_changemap '+map);
 	}
 }
 

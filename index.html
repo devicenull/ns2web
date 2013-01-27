@@ -136,11 +136,11 @@
 		</script>
 
 		<script type="text/html" id="map">
-			<li class="mapcycle_map btn btn-primary" id="<%=name%>"><%=name%></li>
+			<li ondblclick="confirmMapChange('<%=name%>')" class="mapcycle_map btn btn-primary" id="<%=name%>"><%=name%></li>
 		</script>
 		
 		<script type="text/html" id="maplist_row">
-			<a href="#" class="rconbutton" onclick="sendConfirmedRcon('Are you sure you wish to change map to <%=name%>?', 'sv_changemap <%=name%>')"><%=name%></a>
+			<a href="#" onclick="confirmMapChange('<%=name%>')"><%=name%></a>
 		</script>
 
 		<div class="span1">&nbsp;</div>
@@ -184,6 +184,7 @@
 						<p>
 						Drag and drop maps from the Available list to the Active list to add them to the map cycle.
 						Maps can be dragged within a list to change their order (if the map progression is set to "In order").
+						<br />You may also double-click on a map item to change to that map.
 						</p>
 					</div>
 
