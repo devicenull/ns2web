@@ -138,7 +138,10 @@
 		<script type="text/html" id="map">
 			<li class="mapcycle_map btn btn-primary" id="<%=name%>"><%=name%></li>
 		</script>
-
+		
+		<script type="text/html" id="maplist_row">
+			<a href="#" class="rconbutton" onclick="sendConfirmedRcon('Are you sure you wish to change map to <%=name%>?', 'sv_changemap <%=name%>')"><%=name%></a>
+		</script>
 
 		<div class="span1">&nbsp;</div>
 		<div class="span10">
@@ -232,13 +235,8 @@
 								<span class="caret"></span>
 							</button>
 							<ul class="dropdown-menu">
-								<li>
-									<a href="#" class="rconbutton" onclick="sendConfirmedRcon('Are you sure you wish to change map to ns2_docking?', 'sv_changemap ns2_docking')">ns2_docking</a>
-									<a href="#" class="rconbutton" onclick="sendConfirmedRcon('Are you sure you wish to change map to ns2_mineshaft?', 'sv_changemap ns2_mineshaft')">ns2_mineshaft</a>
-									<a href="#" class="rconbutton" onclick="sendConfirmedRcon('Are you sure you wish to change map to ns2_refinery?', 'sv_changemap ns2_refinery')">ns2_refinery</a>
-									<a href="#" class="rconbutton" onclick="sendConfirmedRcon('Are you sure you wish to change map to ns2_summit?', 'sv_changemap ns2_summit')">ns2_summit</a>
-									<a href="#" class="rconbutton" onclick="sendConfirmedRcon('Are you sure you wish to change map to ns2_tram?', 'sv_changemap ns2_tram')">ns2_tram</a>
-									<a href="#" class="rconbutton" onclick="sendConfirmedRcon('Are you sure you wish to change map to ns2_veil?', 'sv_changemap ns2_veil')">ns2_veil</a>
+								<li id="maplist">
+									
 								</li>
 							</ul>
 						</div>

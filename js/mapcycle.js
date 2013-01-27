@@ -15,6 +15,7 @@ function refreshMapList()
 			{
 				var entry = { name: _maps[i].name };
 				$('#maplist_available').append(tmpl('map', entry));
+				$('#maplist').append(tmpl('maplist_row', entry));
 			}
 			
 		},
