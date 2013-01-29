@@ -9,14 +9,15 @@ function refreshMapList()
 		data: {'request': 'getmaplist'},
 		success: function(data) {
 			_maps = data;
-			
+
 			$('#maplist_available').empty();
 			for (var i=0;i<_maps.length;i++)
 			{
 				var entry = { name: _maps[i].name };
 				$('#maplist_available').append(tmpl('map', entry));
+				$('#maplist').append(tmpl('maplist_row', entry));
 			}
-			
+
 		},
 	})
 }
@@ -49,7 +50,7 @@ function refreshMapCycle()
 			$('#map_cycle_time').val(_mapCycle.time);
 			$('#map_cycle_order').val(_mapCycle.mode == "random" ? "Random" : "In order");
 			$("#maplist_active").empty();
-			
+
 			if (_mapCycle.mods)
 			{
 				for (var i=0;i<_mods.length; ++i)
@@ -58,7 +59,7 @@ function refreshMapCycle()
 					$("#mapcycle_mod_" + _mods[i].id).attr('checked', includeMod);
 				}
 			}
-			
+
 			for (var i=0;i<_mapCycle.maps.length;i++)
 			{
 				var name = null;
@@ -72,7 +73,7 @@ function refreshMapCycle()
 				}
 
 				// Remove from the available list.
-				$("#" + name).remove(); 
+				$("#" + name).remove();
 
 				// Add to the active list.
 				var entry = { 'name': name };
@@ -100,7 +101,7 @@ function getModForMap(map)
 	for (var i=0;i<_maps.length; ++i)
 	{
 		if (_maps[i].name == map)
-		{	
+		{
 			return _maps[i].modId;
 		}
 	}
@@ -116,7 +117,7 @@ function saveMapCycle()
 	_mapCycle.mode = $('#map_cycle_order').val() == "Random" ? "random" : "order";
 	_mapCycle.mods = getSelectedMods();
 	_mapCycle.maps = [ ];
-	
+
 	for (var i = 0; i < maps.length; ++i)
 	{
 		// Add in any required mod for each map in the map cycle.
@@ -124,7 +125,7 @@ function saveMapCycle()
 		var map  = maps[i];
 		var modId = getModForMap(map);
 		if (modId != "0" && $.inArray(modId, _mapCycle.mods) == -1)
-		{	
+		{
 			mods.push(modId);
 		}
 		if (mods.length == 0)
@@ -136,7 +137,7 @@ function saveMapCycle()
 			_mapCycle.maps.push({ 'map': map, 'mods': mods });
 		}
 	}
-	
+
 	$.ajax({
 		url: '/',
 		type: "post",
@@ -145,17 +146,17 @@ function saveMapCycle()
 }
 
 $(document).ready(function() {
-	
-		
+
+
 	$( "#maplist_active, #maplist_available" ).sortable({
 			connectWith: ".maplist",
 			stop: function(event, ui) {
 				saveMapCycle();
 			}
 		}).disableSelection();
-		
+
 	$("#map_cycle_time,#map_cycle_order").change( function() { saveMapCycle(); } );
-		
+
 	$.when( refreshMapList(), refreshModList() ).then ( function() { refreshMapCycle(); } );
-	
+
 });
