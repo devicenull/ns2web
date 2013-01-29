@@ -16,3 +16,7 @@ This project makes use of the following:
 Building
 ---------
 The js/baselibs.js file was created by concatenating minified versions of the Javascript in js_src into one file.  This was done to minimize the number of HTTP requests required to display this content.  We could decrease that to around 60KB by gzipping it, but it's unlikely that the built in web server would know how to properly handle gzip'd files.
+
+Development
+-----------
+If you plan on submitting your changes, please make sure your editor has the EditorConfig plugin installed: http://editorconfig.org/ . It gets very tricky to merge changes when everyone uses different line ending and tab formats.
