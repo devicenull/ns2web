@@ -240,7 +240,7 @@ function showPerfChart()
 	$('#perfchart').empty();
 	$.jqplot('perfchart',performance_data,{
 		title: 'Server Performance',
-			axes:{xaxis:{renderer:$.jqplot.DateAxisRenderer,tickOptions:{formatString:'%H:%m'},},yaxis:{min:0}},
+			axes:{xaxis:{renderer:$.jqplot.DateAxisRenderer,tickOptions:{formatString:'%H:%M'},tickInterval: '30 minutes'},yaxis:{min:0,tickInterval: 5}},
 			legend: {
 			show: true,
 			location: 'se',
