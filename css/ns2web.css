@@ -29,7 +29,7 @@ input[name=chat_message]
 	height: 300px;
 }
 
-#modscontent, #playerscontent, #banscontent, #performancecontent
+#modscontent, #mapscontent, #banscontent, #performancecontent
 {
 	display: none;
 }
